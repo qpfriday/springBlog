@@ -22,7 +22,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 프로젝트에서 연결된 DB 의 넘버링 전략을 따라간다.
     private int id; // 시퀀스, auto_increment
 
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(nullable = false, length = 100, unique = true)
     private String username; // 아이디
 
     @Column(nullable = false, length = 100)
@@ -34,6 +34,8 @@ public class User {
     // @ColumnDefault("user")
     @Enumerated(EnumType.STRING)// DB 는 RoleType 이 없다
     private RoleType role; // Enum 을 쓰는게 좋다. ADMIN, USER
+
+    private String oauth;
 
     @CreationTimestamp // 시간 자동 입력
     private Timestamp createDate;

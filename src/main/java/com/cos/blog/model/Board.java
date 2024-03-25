@@ -1,5 +1,7 @@
 package com.cos.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,18 +27,20 @@ public class Board {
     @Column(nullable = false, length = 100)
     private String title;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content; // 섬머노트 라이브러리 <html> 태그가 섞여서 디자인이 됨
 
-    @ColumnDefault("0")
+    // @ColumnDefault("0")
     private int count; // 조회수
 
     @ManyToOne(fetch = FetchType.EAGER) // Many = Board, One = User
     @JoinColumn(name="userId")
     private User user; // DB 는 오브젝트를 저장할 수 없다. FK, 자바는 오브젝트를 저장할 수 있다.
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER) // mappedBy 연관간계의 주인이 아니다 (난 FK 가 아니에요) DB에 컬럼을 만들지 마세요
-    private List<Reply> reply;
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE) // mappedBy 연관간계의 주인이 아니다 (난 FK 가 아니에요) DB에 컬럼을 만들지 마세요
+    @JsonIgnoreProperties({"board"})
+    @OrderBy("id desc")
+    private List<Reply> replys;
 
     @CreationTimestamp
     private Timestamp createDate;
